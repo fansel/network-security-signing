@@ -2,7 +2,7 @@ from cryptography.hazmat.primitives.asymmetric import dsa, rsa, ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 import timeit
-
+from hwcounter import Timer, count, count_end
 
 dsa_key = dsa.generate_private_key(key_size=2048)
 dsa_pubkey = dsa_key.public_key()
@@ -84,3 +84,33 @@ if __name__ == "__main__":
     print(f"{'ECDSA':} {execution_time_ecdsa_sign / runs * 1000:8.3f} {execution_time_ecdsa_verify / runs * 1000:8.3f}")
 
     print("Computational Cost in CPU cycles:")
+    
+    start = count()
+    generateRSASignatrue(toSign) 
+    elapsedRSA = count_end() - start
+    print("RSA cycles: " + str(elapsedRSA))
+
+    start=count()
+    generateDSASignatrue(toSign)
+    elapsedDSA = count_end() - start
+    print("DSA cycles: " + str(elapsedDSA))
+
+    start=count()
+    generateECDSASignatrue(toSign)
+    elapsedECDSA = count_end() - start
+    print("ECDSA cycles: " + str(elapsedECDSA))
+
+    start=count()
+    verifyRSASignature(rsa_signature)
+    elapsedRSAv = count_end() - start
+    print("RSA verification cycles: " + str(elapsedRSAv))
+
+    start=count()
+    verifyDSASignature(dsa_signature)
+    elapsedDSAv = count_end() - start
+    print("DSA verification cycles: " + str(elapsedDSAv))
+
+    start=count()
+    verifyECDSASignature(ec_signature)
+    elapsedECv = count_end() - start
+    print("ECDSA verification cycles: " + str(elapsedECv))
